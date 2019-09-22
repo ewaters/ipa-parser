@@ -10,17 +10,17 @@
     "end": "/"
   },
   {
-    "type": "indistinguishable ",
+    "type": "indistinguishable",
     "start": "(",
     "end": ")"
   },
   {
-    "type": "obscured ",
+    "type": "obscured",
     "start": "⸨",
     "end": "⸩"
   },
   {
-    "type": "prosodic ",
+    "type": "prosodic",
     "start": "{",
     "end": "}"
   }

@@ -83,7 +83,8 @@ module.exports = class Mapper {
     }
 
     get(unicode) {
-        if (/\s/.test(unicode)) {
+		// Hyphens are effectively spacing in Merriam Webster
+        if (/[\s-]/.test(unicode)) {
             return { "type": "spacing" };
         }
 
