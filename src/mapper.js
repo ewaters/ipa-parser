@@ -4,9 +4,11 @@ module.exports = class Mapper {
 
     constructor() {
         this.map = {};
+        this.bracketsByType = {};
     }
 
     _add(unicode, ipa) {
+        ipa.unicode = unicode;
         let previous = this.map[unicode];
         if (previous) {
             throw new Error("duplicate data for character " + unicode + " . Previous " + JSON.stringify(previous));
@@ -52,6 +54,7 @@ module.exports = class Mapper {
     }
 
     addBrackets(bracketType, unicodeStart, unicodeEnd) {
+        this.bracketsByType[bracketType] = { "start": unicodeStart, "end": unicodeEnd };
         if (unicodeStart == unicodeEnd) {
             let data = {
                 "type": "bracket",

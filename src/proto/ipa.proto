@@ -1,0 +1,147 @@
+syntax = "proto3";
+option go_package = "bitbucket.org/ipa-parser/src/proto/ipa";
+
+package ipa;
+
+message Transcription {
+  TranscriptionType type = 1;
+  Unit units = 2;
+}
+
+enum TranscriptionType {
+  UNKNOWN_TRANSCRIPTION_TYPE = 0;
+
+  PHONETIC = 1; // [..]
+  PHONEMIC = 2; // /../
+  INDISTINGUISHABLE = 3; // (..)
+  OBSCURED = 4; // ⸨..⸩
+  PROSODIC = 5; // {..}
+}
+
+message Unit {
+  bool segment = 1;
+  Category category = 2;
+  Value value = 3;
+  Quantity quantity = 4;
+  bool syllabic = 5;
+  Voicing voicing = 6;
+  repeated Place places = 7;
+  CoronalType coronalType = 8;
+  Manner manner = 9;
+  bool lateral = 10;
+  bool nasal = 11;
+  bool ejective = 12;
+  Place secondary = 13;
+  Release release = 14;
+  int32 height = 15;
+  int32 backness = 16;
+  bool rounded = 17;
+  RoundednessModifier roundednessModifier = 18;
+  bool rhotacized = 19;
+  TongueRoot tongueRoot = 20;
+  string unicode = 21;
+}
+
+message Voicing {
+  bool Voiced = 1;
+  Phonation phonation = 2;
+}
+
+enum Category {
+  UNKNOWN_CATEGORY = 0;
+  CONSONANT = 1;
+  INTONATION = 2;
+  SEPARATOR = 3;
+  STRESS = 4;
+  VOWEL = 5;
+}
+
+enum Place {
+  UNKNOWN_PLACE = 0;
+
+  ALVEOLAR = 1;
+  ALVEOPALATAL = 2;
+  BILABIAL = 3;
+  DENTAL = 4;
+  EPIGLOTTAL = 5;
+  GLOTTAL = 6;
+  LABIODENTAL = 7;
+  PALATAL = 8;
+  PHARYNGEAL = 9;
+  POSTALVEOLAR = 10;
+  RETROFLEX = 11;
+  UVULAR = 12;
+  VELAR = 13;
+}
+
+enum CoronalType {
+  UNKNOWN_CORONAL_TYPE = 0;
+  APICAL = 1;
+  LAMINAL = 2;
+  UNSPECIFIED = 3;
+}
+
+enum Release {
+  UNKNOWN_RELEASE = 0;
+  ASPIRATED = 1;
+  LATERAL_RELEASE = 2;
+  NASAL_RELEASE = 3;
+  NO_AUDIBLE_RELEASE = 4;
+  UNASPIRATED = 5;
+}
+
+enum RoundednessModifier {
+  UNKNOWN_ROUNDEDNESS_MODIFIER = 0;
+  LESS = 1;
+  MORE = 2;
+  NONE = 3;
+}
+
+enum TongueRoot {
+  UNKNOWN_TONGUE_ROOT = 0;
+  ADVANCED = 1;
+  NEUTRAL = 2;
+  RETRACTED = 3;
+}
+
+enum Phonation {
+  UNKNOWN_PHONATION = 0;
+  BREATHY = 1;
+  CREAKY = 2;
+  MODAL = 3;
+  VOICELESS = 4;
+}
+
+enum Value {
+  UNKNOWN_VALUE = 0;
+  GLOBAL_FALL = 1;
+  GLOBAL_RISE = 2;
+  LINKING = 3;
+  PRIMARY_STRESS = 4;
+  SECONDARY_STRESS = 5;
+  SYLLABLE_BREAK = 6;
+}
+
+enum Quantity {
+  UNKNOWN_QUANTITY = 0;
+  EXTRA_LONG = 1;
+  EXTRA_SHORT = 2;
+  HALF_LONG = 3;
+  LONG = 4;
+  SHORT = 5;
+}
+
+enum Manner {
+  UNKNOWN_MANNER = 0;
+  AFFRICATE = 1;
+  APPROXIMANT = 2;
+  CLICK = 3;
+  FLAP = 4;
+  FRICATIVE = 5;
+  IMPLOSIVE = 6;
+  PLOSIVE = 7;
+  STOP = 8;
+  TAPPED_FRICATIVE = 9;
+  TRILL = 10;
+  TRILLED_FRICATIVE = 11;
+}

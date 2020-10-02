@@ -42,7 +42,7 @@ module.exports = class UnitsBuilder {
 
       case "diacritic": {
         if (this.state == "vowel" || this.state == "consonant") {
-          this.currentBuilder.addDiacritic(data.diacritic);
+          this.currentBuilder.addDiacritic(data);
         } else {
           throw new IpaSyntaxtError("Diacritic without vowel or consonant");
         }
@@ -58,16 +58,19 @@ module.exports = class UnitsBuilder {
         if (this.state != "consonant") {
           throw new IpaSyntaxtError("Tie-Bar without consonant");
         }
-        this.currentBuilder.addTieBar();
+        this.currentBuilder.addTieBar(data);
       }; break;
 
       default: throw new IpaInternalError("Unsupported data type : '" + data.type + "'");
     }
   }
 
-  spacing() {
+  spacing(unicode) {
     this._endCurrentBuilder();
     this.state = "init";
+	this.units.push({
+		"unicode": unicode
+	});
   }
 
   end() {
@@ -83,6 +86,11 @@ module.exports = class UnitsBuilder {
   }
 
   _buildSupra(data) {
-    return { "segment": false, "category": data.category, "value": data.value };
+    return {
+		"segment": false,
+		"category": data.category,
+		"value": data.value,
+		"unicode": data.unicode
+	};
   }
 }

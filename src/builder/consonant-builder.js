@@ -15,11 +15,14 @@ module.exports = class ConsonantBuilder {
     this.release = "unaspirated";
     this.secondary = "none";
     this.articulations = [];
+    this.unicode = "";
 
     this._addArticulations(consonantDef);
   }
 
-  addDiacritic(diacritic) {
+  addDiacritic(data) {
+    this.unicode += data.unicode;
+    let diacritic = data.diacritic;
     switch (diacritic.type) {
       case "tone": this.segmentHelper.addTone(diacritic.label); break;
       case "quantity": this.segmentHelper.updateQuantity(diacritic.label); break;
@@ -37,9 +40,10 @@ module.exports = class ConsonantBuilder {
     }
   }
 
-  addTieBar() {
+  addTieBar(data) {
     if (this.state != "single-char") throw new IpaSyntaxtError("Unexpected tie-bar. State=" + this.state);
     this.state = "expecting";
+    this.unicode += data.unicode;
   }
 
   isExpectingConsonant() {
@@ -54,6 +58,7 @@ module.exports = class ConsonantBuilder {
   }
 
   _addArticulations(consonantDef) {
+    this.unicode += consonantDef.unicode;
     if (this.articulations.length + consonantDef.places.length > 2) throw new IpaSyntaxtError("Can not manage more than 2 articulations for one consonant.");
 
     this.currentArticulationsLegnth = consonantDef.places.length;
@@ -95,8 +100,9 @@ module.exports = class ConsonantBuilder {
     let data = this._resolveArticulations();
     data.places = Place.orderPlaces(data.places);
 
+    let results = [];
     if (data.manner == "vowel") {
-      return this._buildVowel(data);
+      result = this._buildVowel(data);
     } else {
       data.ejective = this.ejective;
       data.secondary = this.secondary;
@@ -105,8 +111,10 @@ module.exports = class ConsonantBuilder {
         delete data.coronalType;
       }
 
-      return this.segmentHelper.buildConsonant(data);
+      results = this.segmentHelper.buildConsonant(data);
     }
+    results[0].unicode = this.unicode;
+    return results;
   }
 
   _buildVowel(data) {

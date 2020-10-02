@@ -23,14 +23,35 @@ module.exports = class IpaParser {
 
     let alternatives = this._alternatives(normalized);
     if (alternatives.length === 1 && alternatives[0] !== normalized) {
-      throw new IpaSyntaxError("Alternatives parsing failed: got '" + alternatives[0] + "', want '" + normalized + "'");
+      throw new Error("Alternatives parsing failed: got '" + alternatives[0] + "', want '" + normalized + "'");
     }
 
     let results = [];
     for (let i = 0; i < alternatives.length; i++) {
-      results.push(this._parse(alternatives[i]));
+      let input = alternatives[i];
+      let result = this._parse(input);
+      results.push(result);
+
+      // Double check that resulting unicode string is the same as the input.
+      let output = this.compile(result);
+      if (output !== input) {
+        throw new Error(`Input '${input}' !== '${output}'`);
+      }
     }
     return results;
+  }
+
+  compile(parsed) {
+    let brackets = this.mapper.bracketsByType[parsed.type];
+    if (brackets === undefined)
+      throw new Error(`compile() type ${parsed.type} had no brackets`);
+
+    let output = brackets.start;
+    for (let i = 0; i < parsed.units.length; i++) {
+      let unit = parsed.units[i];
+      if (unit.unicode !== undefined) output += unit.unicode;
+    }
+    return output + brackets.end;
   }
 
   /**
@@ -193,7 +214,7 @@ module.exports = class IpaParser {
 
         // SPACING MANAGEMENT
         case "spacing": {
-          builder.spacing();
+          builder.spacing(char);
         }; break;
 
         // DATA MANAGEMENT
@@ -204,7 +225,13 @@ module.exports = class IpaParser {
           } else if (state == "INIT") {
             state = "OPEN";
           }
-          builder.add(symbol);
+          try {
+            builder.add(symbol);
+          } catch(e) {
+            e.message += " (" + normalized.substring(0, i) + " >> " + char + " << " + normalized.substring(i+1) + ")";
+            throw(e);
+          };
+
         }
       }
 

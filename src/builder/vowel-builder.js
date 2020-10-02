@@ -15,6 +15,7 @@ module.exports = class VowelBuilder {
     this.nasal = false;
     this.rhotacized = false;
     this.tongueRoot = "neutral";
+    this.unicode = vowel.unicode;
   }
 
   _updatePhonation(label) {
@@ -95,7 +96,9 @@ module.exports = class VowelBuilder {
     }
   }
 
-  addDiacritic(diacritic) {
+  addDiacritic(data) {
+    this.unicode += data.unicode;
+    let diacritic = data.diacritic;
     switch (diacritic.type) {
       case "tone": this.segmentHelper.addTone(diacritic.label); break;
       case "quantity": this.segmentHelper.updateQuantity(diacritic.label); break;
@@ -123,7 +126,8 @@ module.exports = class VowelBuilder {
       "roundednessModifier": this.roundednessModifier,
       "nasal": this.nasal,
       "rhotacized": this.rhotacized,
-      "tongueRoot": this.tongueRoot
+      "tongueRoot": this.tongueRoot,
+      "unicode": this.unicode
     });
   }
 }

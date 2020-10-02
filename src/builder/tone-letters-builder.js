@@ -12,15 +12,23 @@ module.exports = class ToneLettersBuilder {
   constructor(tone) {
     this.heights = [map[tone.label]];
     this.firstLabel = tone.label;
+    this.unicode = tone.unicode;
   }
 
   addTone(tone) {
+    this.unicode += tone.unicode;
     this.heights.push(map[tone.label])
   }
 
   end() {
     let label = this._computeLabel();
-    return [{ "segment": false, "category": "tone", "label": label, "heights": this.heights }];
+    return [{
+      "segment": false,
+      "category": "tone",
+      "label": label,
+      "heights": this.heights,
+      "unicode": this.unicode
+    }];
   }
 
   _computeLabel() {
